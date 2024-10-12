@@ -9,6 +9,7 @@ import Features03 from '@/components/features-home-03'
 import Target from '@/components/target'
 import PricingSection from '@/components/pricing'
 import Cta from '@/components/cta'
+import SendUsdcForm from '@/components/send-usdc-form'
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -42,6 +43,7 @@ export default function Home() {
     <>
       <Hero />
       <FeaturesBlocks />
+      <SendUsdcForm />
       {/* <Features /> */}
       {/* <Features02 /> */}
       {/* <Features03 /> */}
