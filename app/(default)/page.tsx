@@ -42,11 +42,11 @@ export default function Home() {
     <>
       <Hero />
       <FeaturesBlocks />
-      <Features />
-      <Features02 />
-      <Features03 />
-      <Target />
-      <PricingSection />
+      {/* <Features /> */}
+      {/* <Features02 /> */}
+      {/* <Features03 /> */}
+      {/* <Target /> */}
+      {/* <PricingSection /> */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <h2 className="h3 mb-4 text-center">Test M-Pesa Payment</h2>
         <div className="text-center">

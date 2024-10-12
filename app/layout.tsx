@@ -1,6 +1,6 @@
 import './css/style.css'
 
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Inter, Lobster } from 'next/font/google'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -8,9 +8,10 @@ const inter = Inter({
   display: 'swap'
 })
 
-const playfair = Playfair_Display({
+const lobster = Lobster({
   subsets: ['latin'],
-  variable: '--font-playfair-display',
+  variable: '--font-lobster',
+  weight: '400',
   display: 'swap'
 })
 
@@ -26,8 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} font-inter antialiased bg-white text-slate-800 tracking-tight`}>
-        {children}
+<body className={`${inter.variable} ${lobster.variable} font-inter antialiased bg-white text-slate-800 tracking-tight`}>        {children}
       </body>
     </html>
   )
