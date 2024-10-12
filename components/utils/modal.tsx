@@ -47,35 +47,39 @@ export default function Modal({
       {/* Modal backdrop */}
       <Transition
         show={show}
-        enter="transition ease-out duration-200"
+        enter="transition-opacity duration-300"
         enterFrom="opacity-0"
         enterTo="opacity-100"
-        leave="transition ease-out duration-100"
+        leave="transition-opacity duration-300"
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
-        className="fixed inset-0 z-50 bg-black bg-opacity-75 transition-opacity"
         aria-hidden="true"
-      />
+      >
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-75 transition-opacity" />
+      </Transition>
 
       {/* Modal dialog */}
       <Transition
         show={show}
-        enter="transition ease-out duration-200"
+        enter="transition ease-out duration-300"
         enterFrom="opacity-0 scale-95"
         enterTo="opacity-100 scale-100"
-        leave="ttransition ease-out duration-200"
-        leaveFrom="oopacity-100 scale-100"
+        leave="transition ease-in duration-200"
+        leaveFrom="opacity-100 scale-100"
         leaveTo="opacity-0 scale-95"
-        id={id}
-        className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center transform px-4 sm:px-6"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={ariaLabel}          
-      >        
-        <div className="bg-white overflow-auto max-w-6xl w-full max-h-full" ref={modalContent}>          
-          {children}
+      >
+        <div
+          id={id}
+          className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center transform px-4 sm:px-6"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={ariaLabel}
+        >
+          <div className="bg-white overflow-auto max-w-6xl w-full max-h-full" ref={modalContent}>
+            {children}
+          </div>
         </div>
-      </Transition>    
+      </Transition>
     </>
   )
 }
