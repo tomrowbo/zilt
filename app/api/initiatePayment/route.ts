@@ -4,7 +4,7 @@ import axios from 'axios';
 import { getAccessToken } from '@/utils/mpesa';
 import { NextResponse } from 'next/server';
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://localhost:3000"; 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://zilt.vercel.app/"; 
 
 export async function POST(request: Request) {
   try {
