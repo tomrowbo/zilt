@@ -12,9 +12,11 @@ import Cta from '@/components/cta'
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const initiatePayment = async () => {
     setLoading(true);
+    setSuccessMessage('');
     try {
       const response = await fetch('/api/initiatePayment', {
         method: 'POST',
@@ -22,8 +24,15 @@ export default function Home() {
 
       const data = await response.json();
       console.log('Payment initiation response:', data);
+      
+      if (response.ok) {
+        setSuccessMessage('Payment successful!');
+      } else {
+        setSuccessMessage('Payment failed. Please try again.');
+      }
     } catch (error) {
       console.error('Error initiating payment:', error);
+      setSuccessMessage('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -48,6 +57,11 @@ export default function Home() {
           >
             {loading ? 'Processing...' : 'Initiate Payment'}
           </button>
+          {successMessage && (
+            <p className={`mt-4 text-lg ${successMessage.includes('successful') ? 'text-green-600' : 'text-red-600'}`}>
+              {successMessage}
+            </p>
+          )}
         </div>
       </div>
       <Cta />
