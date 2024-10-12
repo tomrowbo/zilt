@@ -1,8 +1,6 @@
-export const metadata = {
-  title: 'Home - Tidy',
-  description: 'Page description',
-}
+'use client'
 
+import { useState } from 'react'
 import Hero from '@/components/hero-home'
 import FeaturesBlocks from '@/components/features-blocks'
 import Features from '@/components/features-home'
@@ -13,6 +11,24 @@ import PricingSection from '@/components/pricing'
 import Cta from '@/components/cta'
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
+
+  const initiatePayment = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/initiatePayment', {
+        method: 'POST',
+      });
+
+      const data = await response.json();
+      console.log('Payment initiation response:', data);
+    } catch (error) {
+      console.error('Error initiating payment:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <Hero />
@@ -22,6 +38,18 @@ export default function Home() {
       <Features03 />
       <Target />
       <PricingSection />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        <h2 className="h3 mb-4 text-center">Test M-Pesa Payment</h2>
+        <div className="text-center">
+          <button 
+            onClick={initiatePayment} 
+            disabled={loading}
+            className="btn text-white bg-blue-600 hover:bg-blue-700 w-full sm:w-auto sm:ml-4"
+          >
+            {loading ? 'Processing...' : 'Initiate Payment'}
+          </button>
+        </div>
+      </div>
       <Cta />
     </>
   )
