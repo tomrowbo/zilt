@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import StellarSdk from 'stellar-sdk';
+import StellarSdk, { BASE_FEE } from 'stellar-sdk';
 
 // Set up the Stellar server
 const server = new StellarSdk.Horizon.Server("https://horizon-testnet.stellar.org");
@@ -10,7 +10,7 @@ const SOURCE_PUBLIC_KEY = StellarSdk.Keypair.fromSecret(SOURCE_SECRET_KEY).publi
 
 // Define the USDC asset parameters
 const USDC_ASSET_CODE = 'USDC';
-const USDC_ISSUER = 'GCHJ2UR35IBGXMSYWWCON2WG4KLXDU2MKKGTBLFL4QIUBYY26GU7IX7Q';
+const USDC_ISSUER = 'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5';
 
 export async function POST(request: NextRequest) {
     try {
@@ -31,82 +31,94 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Error loading destination account' }, { status: 500 });
         }
 
-        // Check if the destination account has a trustline for USDC
+        // Check if USDC is in the trust list
         const hasTrustline = destinationAccount.balances.some(
             (balance: { asset_code: string; asset_issuer: string }) =>
                 balance.asset_code === USDC_ASSET_CODE && balance.asset_issuer === USDC_ISSUER
         );
 
         if (!hasTrustline) {
-            console.log("Creating trustline because the destination lacks a trustline.");
-            await createClaimableBalance(destinationId, amount);
+            // Create a transaction to add USDC to the trust list
+            const transaction = await createTrustLine(destinationId);
+            
+            // Return the transaction XDR for signing
+            return NextResponse.json({ 
+                requiresTrust: true, 
+                transactionXDR: transaction.toXDR(),
+                message: 'USDC trust line needs to be added. Please sign the transaction.'
+            }, { status: 200 });
         }
 
-        // Now that the trustline is ensured, proceed with the payment
+        // If USDC is already in the trust list, proceed with the payment
         const result = await createPayment(destinationId, amount);
         return NextResponse.json({ success: true, result }, { status: 200 });
 
     } catch (error) {
         console.error("Something went wrong!", error);
 
-        if (error instanceof Error && 'response' in error && error.response && 
-            typeof (error.response as any).data === 'object' && (error.response as any).data !== null) {
-            const stellarError = (error.response as any).data;
-            return NextResponse.json({
-                error: 'Transaction failed',
-                status: 400,
-                detail: stellarError.detail || 'The transaction failed when submitted to the Stellar network.',
-                resultCodes: stellarError.extras?.result_codes || 'No result codes available',
-                type: stellarError.type || 'Unknown error type',
-                title: stellarError.title || 'Transaction Failed',
-                extras: JSON.stringify(stellarError.extras) || 'No extra information available',
-            });
+        if (error instanceof Error && 'response' in error && error.response && 'data' in error.response) {
+            const stellarError = error.response.data as StellarErrorResponse;
+            console.error("Error details:", JSON.stringify(stellarError, null, 2));
         }
-
-        return NextResponse.json({ error: 'An unknown error occurred' }, { status: 500 });
-    }
-}
-
-async function createClaimableBalance(destinationPublicKey: string, amount: string) {
-    try {
-        const sourceKeys = StellarSdk.Keypair.fromSecret(SOURCE_SECRET_KEY);
-        const sourceAccount = await server.loadAccount(sourceKeys.publicKey());
-
-        const transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
-            fee: StellarSdk.BASE_FEE,
-            networkPassphrase: StellarSdk.Networks.TESTNET,
-        })
-            .addOperation(
-                StellarSdk.Operation.createClaimableBalance({
-                    asset: new StellarSdk.Asset(USDC_ASSET_CODE, USDC_ISSUER),
-                    amount: amount.toString(),
-                    claimants: [
-                        new StellarSdk.Claimant(destinationPublicKey, 
-                            StellarSdk.Claimant.predicateUnconditional()
-                        ),
-                    ],
-                })
-            )
-            .setTimeout(180)
-            .build();
-
-        transaction.sign(sourceKeys);
-
-        const result = await server.submitTransaction(transaction);
-        console.log("Claimable balance created successfully:", result);
-        return result;
-    } catch (error) {
-        console.error("Error creating claimable balance:", error);
         throw error;
     }
 }
 
+
+async function createTrustLine(destinationPublicKey: string) {
+    const destinationAccount = await server.loadAccount(destinationPublicKey);
+    
+    // Create a new transaction for creating a trust line
+    const transaction = new StellarSdk.TransactionBuilder(
+        destinationAccount, {
+          fee: BASE_FEE,
+          networkPassphrase: StellarSdk.Networks.TESTNET
+        })
+        .addOperation(StellarSdk.Operation.changeTrust({
+            asset: new StellarSdk.Asset(USDC_ASSET_CODE, USDC_ISSUER),
+            limit: "100",
+        }))
+        .setTimeout(180)
+        .build();
+
+    return transaction;
+}
+
+
 // Function to create a payment
 async function createPayment(destinationPublicKey: string, amount: string) {
     const sourceKeys = StellarSdk.Keypair.fromSecret(SOURCE_SECRET_KEY);
-    const sourceAccount = await server.loadAccount(sourceKeys.publicKey());
+    let sourceAccount = await server.loadAccount(sourceKeys.publicKey());
 
-    const transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
+    // Check if source account has USDC trustline
+    const hasSourceTrustline = sourceAccount.balances.some(
+        (balance: { asset_code: string; asset_issuer: string }) =>
+            balance.asset_code === USDC_ASSET_CODE && balance.asset_issuer === USDC_ISSUER
+    );
+
+    let transaction;
+
+    if (!hasSourceTrustline) {
+        // Create a transaction to add USDC trustline for source account
+        transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
+            fee: StellarSdk.BASE_FEE,
+            networkPassphrase: StellarSdk.Networks.TESTNET,
+        })
+            .addOperation(StellarSdk.Operation.changeTrust({
+                asset: new StellarSdk.Asset(USDC_ASSET_CODE, USDC_ISSUER),
+            }))
+            .setTimeout(180)
+            .build();
+
+        transaction.sign(sourceKeys);
+        await server.submitTransaction(transaction);
+
+        // Reload the source account to get the updated state
+        sourceAccount = await server.loadAccount(sourceKeys.publicKey());
+    }
+
+    // Create the payment transaction
+    transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
         fee: StellarSdk.BASE_FEE,
         networkPassphrase: StellarSdk.Networks.TESTNET,
     })
@@ -123,7 +135,48 @@ async function createPayment(destinationPublicKey: string, amount: string) {
 
     transaction.sign(sourceKeys);
 
-    const result = await server.submitTransaction(transaction);
-    console.log("Transaction submitted successfully:", result);
-    return result;
+    try {
+        const result = await server.submitTransaction(transaction);
+        console.log("Transaction submitted successfully:", result);
+        return result;
+    } catch (error) {
+        console.error("Transaction submission failed:", error);
+        if (
+          error instanceof Error &&
+          typeof (error as any).response === 'object' &&
+          (error as any).response !== null &&
+          'data' in (error as any).response
+        ) {
+          const stellarError = (error as any).response.data as StellarErrorResponse;
+          console.error("Error details:", JSON.stringify(stellarError, null, 2));
+        }
+        throw error;
+    }
+}
+
+interface StellarError {
+    type?: string;
+    title?: string;
+    extras?: {
+        result_codes?: {
+            transaction?: string;
+            operations?: string[];
+        };
+        [key: string]: any;
+    };
+}
+
+interface StellarErrorResponse {
+    type: string;
+    title: string;
+    status: number;
+    detail: string;
+    extras?: {
+        envelope_xdr?: string;
+        result_codes?: {
+            transaction?: string;
+            operations?: string[];
+        };
+        result_xdr?: string;
+    };
 }
