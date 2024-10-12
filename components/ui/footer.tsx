@@ -18,7 +18,7 @@ export default function Footer() {
                 </svg>
               </Link>
             </div>
-            <div className="text-lg font-bold text-slate-800">The smarter way to start your next idea.</div>
+            <div className="text-lg font-bold text-slate-800">Bridging mobile money and cryptocurrency.</div>
           </div>
 
           {/* 2nd block */}
@@ -29,10 +29,10 @@ export default function Footer() {
                 <a href="#" className="text-slate-500 hover:text-blue-600 transition duration-150 ease-in-out">Overview</a>
               </li>
               <li>
-                <a href="#" className="text-slate-500 hover:text-blue-600 transition duration-150 ease-in-out">Pricing</a>
+                <a href="#" className="text-slate-500 hover:text-blue-600 transition duration-150 ease-in-out">Supported Currencies</a>
               </li>
               <li>
-                <a href="#" className="text-slate-500 hover:text-blue-600 transition duration-150 ease-in-out">Service Areas</a>
+                <a href="#" className="text-slate-500 hover:text-blue-600 transition duration-150 ease-in-out">Fees</a>
               </li>
             </ul>
           </div>
@@ -42,13 +42,13 @@ export default function Footer() {
             <h6 className="text-sm text-slate-800 font-semibold mb-2">Resources</h6>
             <ul className="text-sm font-medium space-y-2">
               <li>
-                <a href="#" className="text-slate-500 hover:text-blue-600 transition duration-150 ease-in-out">Customer Stories</a>
+                <a href="#" className="text-slate-500 hover:text-blue-600 transition duration-150 ease-in-out">User Guide</a>
               </li>
               <li>
-                <a href="#" className="text-slate-500 hover:text-blue-600 transition duration-150 ease-in-out">Knowledge Base</a>
+                <a href="#" className="text-slate-500 hover:text-blue-600 transition duration-150 ease-in-out">API Documentation</a>
               </li>
               <li>
-                <a href="#" className="text-slate-500 hover:text-blue-600 transition duration-150 ease-in-out">Contact Us</a>
+                <a href="#" className="text-slate-500 hover:text-blue-600 transition duration-150 ease-in-out">Contact Support</a>
               </li>
             </ul>
           </div>

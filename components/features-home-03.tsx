@@ -8,14 +8,14 @@ export default function FeaturesHome03() {
     <section className="relative">
 
       {/* Dark background */}
-      <div className="absolute inset-0 bg-slate-900 pointer-events-none -z-10 [clip-path:polygon(0_0,_5760px_0,_5760px_calc(100%_-_352px),_0_100%)] h-96 md:h-auto md:mb-64" aria-hidden="true"></div>
+      <div className="absolute inset-0 bg-dark pointer-events-none -z-10 [clip-path:polygon(0_0,_5760px_0,_5760px_calc(100%_-_352px),_0_100%)] h-96 md:h-auto md:mb-64" aria-hidden="true"></div>
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
         <div className="py-12 md:py-20">
 
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-20">
-            <h2 className="h2 font-playfair-display text-slate-100">Simplify operating and manage with transparency</h2>
+            <h2 className="h2 font-playfair-display text-primary-100">Simplify operating and manage with transparency</h2>
           </div>
 
           {/* Section content */}
