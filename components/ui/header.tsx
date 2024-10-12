@@ -22,7 +22,7 @@ export default function Header({ mode = 'dark' }: {
             {/* Desktop menu links */}
             <ul className="flex grow justify-start flex-wrap items-center">
               <li>
-                <Link href="/pricing" className="font-medium text-slate-800 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out">Pricing</Link>
+                <Link href="/ramp" className="font-medium text-slate-800 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out">Ramp</Link>
               </li>
               <li>
                 <Link href="/about" className="font-medium text-slate-800 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-600 px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out">About</Link>

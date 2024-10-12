@@ -1,6 +1,5 @@
-import PricingTables from './pricing-tables';
-
-export default function HeroPricing() {  
+import CryptoExchange from './exchange';
+export default function Ramp() {  
   return (
     <section className="relative">
 
@@ -12,11 +11,9 @@ export default function HeroPricing() {
 
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12">
-            <h1 className="h1 font-playfair-display text-slate-100">Find the right plan for your business</h1>
+            {/* TODO: body of exchange */}
           </div>
-
-          <PricingTables />
-
+          <CryptoExchange />
         </div>
       </div>
 
