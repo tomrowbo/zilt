@@ -71,7 +71,7 @@ For detailed instructions, please visit our [Getting Started Guide](link-to-guid
 
 Follow us on social media to stay updated on the latest news and features:
 
-- Twitter: [@ZiltOfficial](link-to-twitter)
+- Twitter: [https://x.com/ZiltOfficial]
 
 ## License
 
