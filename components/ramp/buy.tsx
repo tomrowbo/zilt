@@ -1,15 +1,15 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CurrencySelect from './currencySelect';
 import Image from 'next/image';
 
 const Buy: React.FC = () => {
-  const [buyAmount, setBuyAmount] = useState(0);
-  const [buyCurrency, setBuyCurrency] = useState('USDC');
+  const [buyAmount, setBuyAmount] = useState();
+  const [buyCurrency, setBuyCurrency] = useState('TZS');
   const [paymentMethod, setPaymentMethod] = useState('mpesa');
-  const [receiveAmount, setReceiveAmount] = useState(0);
-  const [receiveCurrency, setReceiveCurrency] = useState('TZ');
+  const [receiveAmount, setReceiveAmount] = useState();
+  const [receiveCurrency, setReceiveCurrency] = useState('USDC');
   const [mobileNumber, setMobileNumber] = useState('');
 
   const paymentMethods = {
@@ -18,9 +18,27 @@ const Buy: React.FC = () => {
   };
 
   const currencies = {
-    TZ: { name: 'TZ', image: '/images/tz.svg' },
-    ZW: { name: 'ZW', image: '/images/zw.svg' },
-    KE: { name: 'KE', image: '/images/ke.svg' },
+    TZS: { name: 'TZS', image: '/images/tz.svg' },
+    USD: { name: 'USD', image: '/images/zw.svg' },
+    KES: { name: 'KES', image: '/images/ke.svg' },
+  };
+
+  useEffect(() => {
+    let convertedAmount = 0;
+    if (buyCurrency === 'TZS') {
+      convertedAmount = buyAmount / 2300;
+    } else if (buyCurrency === 'KES') {
+      convertedAmount = buyAmount / 140;
+    }
+    if (buyCurrency === 'USD'){
+        convertedAmount = receiveAmount 
+    }
+    setReceiveAmount(Number(convertedAmount.toFixed(2)));
+  }, [buyAmount, buyCurrency]);
+
+  const handleBuyAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    setBuyAmount(isNaN(value) ? 0 : value);
   };
 
   return (
@@ -50,35 +68,35 @@ const Buy: React.FC = () => {
       </div>
 
       < div className="bg-gray-50 p-4 rounded-lg mb-4">
-        <div className="text-sm text-gray-500 mb-2">YOU RECIEVER </div>
+        <div className="text-sm text-gray-500 mb-2">YOU SELL </div>
         <div className="flex justify-between items-center">
           <input
             type="number"
-            value={receiveAmount}
-            onChange={(e) => setReceiveAmount(parseFloat(e.target.value))}
+            value={buyAmount}
+            onChange={handleBuyAmountChange}
             className="text-2xl font-semibold w-1/2 bg-transparent focus:outline-none"
           />
           <CurrencySelect 
-            value={receiveCurrency}
-            onChange={setReceiveCurrency}
-            options={['TZ', 'ZW', 'KE']}
+            value={buyCurrency}
+            onChange={setBuyCurrency}
+            options={['TZS', 'KES']}
           />
         </div>
       </div>
 
 
       <div className="bg-gray-50 p-4 rounded-lg mb-4">
-        <div className="text-sm text-gray-500 mb-2">YOU SELL</div>
+        <div className="text-sm text-gray-500 mb-2">YOU RECIEVE</div>
         <div className="flex justify-between items-center">
           <input
             type="number"
-            value={buyAmount}
-            onChange={(e) => setBuyAmount(parseFloat(e.target.value))}
+            value={receiveAmount}
+            readOnly
             className="text-2xl font-semibold w-1/2 bg-transparent focus:outline-none"
           />
           <CurrencySelect 
-            value={buyCurrency}
-            onChange={setBuyCurrency}
+            value={receiveCurrency}
+            onChange={setReceiveCurrency}
             options={['USDC']}
           />
         </div>

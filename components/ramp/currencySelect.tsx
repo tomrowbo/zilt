@@ -11,16 +11,15 @@ interface Currency {
 interface Currencies {
   [key: string]: Currency;
 }
-
 const currencies: Currencies = {
     MPESA: { name: 'MPESA', image: '/images/mpesa.svg' },
     USDC: { name: 'USDC', image: '/images/usdc-logo.svg' },
-    TZ: { name: 'TZ', image: '/images/tz.svg' },
-    ZW: { name: 'ZW', image: '/images/zw.svg' },
-    KE: { name: 'KE', image: '/images/ke.svg' },
+    TZS: { name: 'TZS', image: '/images/tz.svg' },
+    USD: { name: 'USD', image: '/images/zw.svg' },
+    KES: { name: 'KES', image: '/images/ke.svg' },
   };
 
-  
+
 
 interface CurrencySelectProps {
   value: string;
