@@ -56,7 +56,15 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         console.error("Something went wrong!", error);
 
-        if (error instanceof Error && 'response' in error && error.response && 'data' in error.response) {
+        if (
+            error instanceof Error &&
+            typeof error === 'object' &&
+            error !== null &&
+            'response' in error &&
+            typeof error.response === 'object' &&
+            error.response !== null &&
+            'data' in error.response
+        ) {
             const stellarError = error.response.data as StellarErrorResponse;
             console.error("Error details:", JSON.stringify(stellarError, null, 2));
         }
