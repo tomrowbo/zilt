@@ -5,10 +5,10 @@ import CurrencySelect from './currencySelect';
 import Image from 'next/image';
 
 const Buy: React.FC = () => {
-  const [buyAmount, setBuyAmount] = useState();
+  const [buyAmount, setBuyAmount] = useState<number | undefined>(undefined);
   const [buyCurrency, setBuyCurrency] = useState('TZS');
   const [paymentMethod, setPaymentMethod] = useState('mpesa');
-  const [receiveAmount, setReceiveAmount] = useState();
+  const [receiveAmount, setReceiveAmount] = useState<number | undefined>(undefined);
   const [receiveCurrency, setReceiveCurrency] = useState('USDC');
   const [mobileNumber, setMobileNumber] = useState('');
 
@@ -24,29 +24,26 @@ const Buy: React.FC = () => {
   };
 
   useEffect(() => {
+    if (buyAmount === undefined) return;
+
     let convertedAmount = 0;
     if (buyCurrency === 'TZS') {
       convertedAmount = buyAmount / 2300;
     } else if (buyCurrency === 'KES') {
       convertedAmount = buyAmount / 140;
-    }
-    if (buyCurrency === 'USD'){
-        convertedAmount = receiveAmount 
+    } else if (buyCurrency === 'USD') {
+      convertedAmount = buyAmount;
     }
     setReceiveAmount(Number(convertedAmount.toFixed(2)));
   }, [buyAmount, buyCurrency]);
 
   const handleBuyAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
-    setBuyAmount(isNaN(value) ? 0 : value);
+    setBuyAmount(isNaN(value) ? undefined : value);
   };
 
   return (
     <>
-      {/* Add your buy form here, similar to the sell form in the original component */}
-      {/* Use the state variables and functions defined above */}
-      <>
-
       <div className="bg-gray-50 p-4 rounded-lg mb-4">
         <div className="text-sm text-gray-500 mb-2">Payment Method</div>
         <div className="flex space-x-2">
@@ -67,30 +64,29 @@ const Buy: React.FC = () => {
         </div>
       </div>
 
-      < div className="bg-gray-50 p-4 rounded-lg mb-4">
+      <div className="bg-gray-50 p-4 rounded-lg mb-4">
         <div className="text-sm text-gray-500 mb-2">YOU SELL </div>
         <div className="flex justify-between items-center">
           <input
             type="number"
-            value={buyAmount}
+            value={buyAmount === undefined ? '' : buyAmount}
             onChange={handleBuyAmountChange}
             className="text-2xl font-semibold w-1/2 bg-transparent focus:outline-none"
           />
           <CurrencySelect 
             value={buyCurrency}
             onChange={setBuyCurrency}
-            options={['TZS', 'KES']}
+            options={['TZS', 'KES', 'USD']}
           />
         </div>
       </div>
 
-
       <div className="bg-gray-50 p-4 rounded-lg mb-4">
-        <div className="text-sm text-gray-500 mb-2">YOU RECIEVE</div>
+        <div className="text-sm text-gray-500 mb-2">YOU RECEIVE</div>
         <div className="flex justify-between items-center">
           <input
             type="number"
-            value={receiveAmount}
+            value={receiveAmount === undefined ? '' : receiveAmount}
             readOnly
             className="text-2xl font-semibold w-1/2 bg-transparent focus:outline-none"
           />
@@ -102,11 +98,7 @@ const Buy: React.FC = () => {
         </div>
       </div>
 
-     
-
-      <button
-        className="w-full p-2 mb-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
-      >
+      <button className="w-full p-2 mb-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out">
         Connect Wallet
       </button>
 
@@ -120,7 +112,6 @@ const Buy: React.FC = () => {
           className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
-    </>
     </>
   );
 };
