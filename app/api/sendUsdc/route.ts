@@ -193,4 +193,4 @@ interface StellarErrorResponse {
         };
         result_xdr?: string;
     };
-}
+} 
