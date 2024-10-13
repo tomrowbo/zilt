@@ -14,6 +14,8 @@ const Buy: React.FC = () => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [stellarAddress, setStellarAddress] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const savedAddress = localStorage.getItem('stellarAddress');
@@ -41,6 +43,38 @@ const Buy: React.FC = () => {
     TZ: { name: 'TZ', image: '/images/tz.svg' },
     ZW: { name: 'ZW', image: '/images/ecocash.svg' },
     KE: { name: 'KE', image: '/images/ke.svg' },
+  };
+
+  const initiatePayment = async () => {
+    setLoading(true);
+    setSuccessMessage('');
+    try {
+      const response = await fetch('/api/initiatePayment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mobileNumber,
+          amount: buyAmount,
+          currency: buyCurrency,
+        }),
+      });
+
+      const data = await response.json();
+      console.log('Payment initiation response:', data);
+      
+      if (response.ok) {
+        setSuccessMessage('Payment successful!');
+      } else {
+        setSuccessMessage('Payment failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error initiating payment:', error);
+      setSuccessMessage('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -104,6 +138,7 @@ const Buy: React.FC = () => {
       </div>
 
 
+
       <button
         className="w-full p-2 mb-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
         onClick={handleStellarLogin}
@@ -116,16 +151,35 @@ const Buy: React.FC = () => {
           : "Connect Wallet"}
       </button>
 
-      <div className="bg-gray-50 p-4 rounded-lg mb-4">
-        <div className="text-sm text-gray-500 mb-2">YOUR MOBILE NUMBER</div>
-        <input
-          type="tel"
-          placeholder="Enter your mobile number"
-          value={mobileNumber}
-          onChange={(e) => setMobileNumber(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+      {stellarAddress && (
+        <div className="bg-gray-50 p-4 rounded-lg mb-4">
+          <div className="text-sm text-gray-500 mb-2">YOUR MOBILE NUMBER</div>
+          <input
+            type="tel"
+            placeholder="Enter your mobile number"
+            value={mobileNumber}
+            onChange={(e) => setMobileNumber(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      )}
+
+      {stellarAddress && mobileNumber && (
+        <div>
+          <button
+            className="w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
+            onClick={initiatePayment}
+            disabled={loading}
+          >
+            {loading ? 'Processing...' : 'Checkout'}
+          </button>
+          {successMessage && (
+            <p className={`mt-4 text-lg ${successMessage.includes('successful') ? 'text-green-600' : 'text-red-600'}`}>
+              {successMessage}
+            </p>
+          )}
+        </div>
+      )}
     </>
     </>
   );
