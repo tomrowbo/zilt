@@ -40,8 +40,8 @@ Start the server
 
 Zilt currently supports the following mobile payment systems:
 
-- M-Pesa
-- More coming soon...
+- M-Pesa (Kenya, Tanzania, South Africa, Afghanistan, Lesotho, DRC, Ghana, Mozambique, Egypt, Ethiopia.)
+- Soon we will intergrate Zimbabwe's Ecocash.
 
 
 ## Key Features
