@@ -1,4 +1,4 @@
-'use client'
+  'use client'
 
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
@@ -111,7 +111,7 @@ export default function FeaturesHome() {
                   enterTo="opacity-100 translate-y-0"
                   leave="transition ease-in-out duration-300 transform absolute"
                   leaveFrom="opacity-100 translate-y-0"
-                  leaveTo="opacity-0 translate-y-16"
+                  leaveTo="opacity-0 translateX-y-16"
                   beforeEnter={() => heightFix()}
                 >
                   <Image className="mx-auto shadow-2xl" src={FeaturesImage} width={768} height={474} alt="Features home 01" />

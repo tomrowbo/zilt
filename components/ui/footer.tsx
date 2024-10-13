@@ -126,7 +126,7 @@ export default function Footer() {
           </ul>
 
           {/* Copyrights note */}
-          <div className="text-sm text-slate-500 mr-4">© Cruip.com. All rights reserved.</div>
+          <div className="text-sm text-slate-500 mr-4">© Zilt.com. All rights reserved.</div>
 
         </div>
 

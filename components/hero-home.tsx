@@ -21,8 +21,8 @@ export default function HeroHome() {
             <p className="text-xl text-primary-300 mb-8">Zilt bridges the gap between mobile money and cryptocurrency. Built on the Stellar network, we offer instant USDC access through M-Pesa, Eco-cash, and more.</p>
               <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
                 <div>
-                  <Link className="btn text-white bg-blue-600 hover:bg-blue-700 w-full group" href="/request-demo">
-                    Get Started <span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">-&gt;</span>
+                  <Link className="btn text-white bg-blue-600 hover:bg-blue-700 w-full group" href="/ramp">
+                    Launch App<span className="tracking-normal text-blue-300 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1">-&gt;</span>
                   </Link>
                 </div>
                 <div>
