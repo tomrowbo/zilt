@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { openWalletModal } from "@/app/lib/stellarWalletsKey";
 import CurrencySelect from './currencySelect';
 import Image from 'next/image';
 
@@ -11,11 +12,30 @@ const Buy: React.FC = () => {
   const [receiveAmount, setReceiveAmount] = useState(0);
   const [receiveCurrency, setReceiveCurrency] = useState('MPESA');
   const [mobileNumber, setMobileNumber] = useState('');
+  const [stellarAddress, setStellarAddress] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-//   const paymentMethods = {
-//     mpesa: { name: 'MPESA', image: '/images/mpesa.svg' },
-//     ecocash: { name: 'ECOCASH', image: '/images/ecocash.svg' },
-//   };
+  useEffect(() => {
+    const savedAddress = localStorage.getItem('stellarAddress');
+    if (savedAddress) {
+      setStellarAddress(savedAddress);
+    }
+  }, []);
+
+  const handleStellarLogin = async () => {
+    setIsLoading(true);
+    try {
+      const address = await openWalletModal();
+      if (address) {
+        setStellarAddress(address);
+        localStorage.setItem('stellarAddress', address);
+      }
+    } catch {
+      alert("Failed to connect with Stellar wallet.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const paymentMethods = {
     TZ: { name: 'TZ', image: '/images/tz.svg' },
@@ -86,8 +106,14 @@ const Buy: React.FC = () => {
 
       <button
         className="w-full p-2 mb-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
+        onClick={handleStellarLogin}
+        disabled={isLoading}
       >
-        Connect Wallet
+        {stellarAddress
+          ? `Connected: ${stellarAddress.slice(0, 6)}...${stellarAddress.slice(-4)}`
+          : isLoading
+          ? "Connecting..."
+          : "Connect Wallet"}
       </button>
 
       <div className="bg-gray-50 p-4 rounded-lg mb-4">
