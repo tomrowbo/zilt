@@ -185,16 +185,43 @@ const Buy: React.FC = () => {
           : "Connect Wallet"}
       </button>
 
-      <div className="bg-gray-50 p-4 rounded-lg mb-4">
-        <div className="text-sm text-gray-500 mb-2">YOUR MOBILE NUMBER</div>
-        <input
-          type="tel"
-          placeholder="Enter your mobile number"
-          value={mobileNumber}
-          onChange={(e) => setMobileNumber(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+      {stellarAddress && (
+        <div className="bg-gray-50 p-4 rounded-lg mb-4">
+          <div className="text-sm text-gray-500 mb-2">YOUR MOBILE NUMBER</div>
+          <input
+            type="tel"
+            placeholder="Enter your mobile number"
+            value={mobileNumber}
+            onChange={(e) => setMobileNumber(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      )}
+
+      {stellarAddress && mobileNumber && (
+        <div>
+          <button
+            className="w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
+            onClick={initiatePayment}
+            disabled={loading}
+          >
+            {loading ? 'Waiting for payment...' : 'Checkout'}
+          </button>
+        </div>
+      )}
+      <Modal 
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          if (isSuccess) {
+            router.push('/');
+          }
+        }}
+        title={modalTitle}
+        message={modalMessage}
+        isSuccess={isSuccess}
+      />
+  
     </>
   );
 };
