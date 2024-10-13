@@ -41,8 +41,7 @@ Start the server
 Zilt currently supports the following mobile payment systems:
 
 - M-Pesa
-- Eco-cash
-- UPI (Unified Payments Interface)
+- More coming soon...
 
 
 ## Key Features
@@ -57,9 +56,8 @@ Zilt currently supports the following mobile payment systems:
 
 To start using Zilt, follow these steps:
 
-1. Sign up for a Zilt account
-2. Connect your preferred mobile money account
-3. Start converting your mobile money to USDC
+1. Connect your Stellar wallet
+2. Pay with preferred mobile money account
 
 For detailed instructions, please visit our [Getting Started Guide](link-to-guide). - DEMO
 
