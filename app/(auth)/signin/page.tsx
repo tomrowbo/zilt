@@ -19,6 +19,8 @@ export default function SignIn() {
       const address = await openWalletModal();
       if (address) {
         setStellarAddress(address);
+        localStorage.setItem('stellarAddress', address);
+        window.location.href = '/';
       }
     } catch {
       alert("Failed to connect with Stellar wallet.");

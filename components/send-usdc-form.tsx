@@ -99,7 +99,7 @@ const SendUsdcForm = () => {
     <form onSubmit={handleSubmit}>
       <input
         type="text"
-        placeholder="Destination Stellar ID"
+        placeholder="Stellar Address"
         value={destinationId}
         onChange={(e) => setDestinationId(e.target.value)}
         required

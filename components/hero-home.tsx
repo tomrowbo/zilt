@@ -17,7 +17,7 @@ export default function HeroHome() {
 
             {/* Content */}
             <div className="text-center md:text-left md:min-w-[30rem]" data-aos="fade-right">
-            <h1 className="h1 font-playfair-display text-primary-100 mb-4">USDC On-ramp for Mobile Money</h1>
+            <h1 className="h1 font-playfair-display text-primary-100 mb-4">USDC ramping for Mobile Money</h1>
             <p className="text-xl text-primary-300 mb-8">Zilt bridges the gap between mobile money and cryptocurrency. Built on the Stellar network, we offer instant USDC access through M-Pesa, Eco-cash, and UPI.</p>
               <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
                 <div>
