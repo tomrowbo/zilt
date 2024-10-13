@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { kit } from '@/app/lib/stellarWalletsKey';
 import { TransactionBuilder, Networks } from 'stellar-sdk';
 
@@ -37,6 +37,13 @@ const SendUsdcForm = () => {
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  useEffect(() => {
+    const storedAddress = localStorage.getItem('stellarAddress');
+    if (storedAddress) {
+      setDestinationId(storedAddress);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,25 +103,45 @@ const SendUsdcForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Stellar Address"
-        value={destinationId}
-        onChange={(e) => setDestinationId(e.target.value)}
-        required
-      />
-      <input
-        type="number"
-        placeholder="Amount (USDC)"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        required
-      />
-      <button type="submit">Send USDC</button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
-    </form>
+    <div className="max-w-md mx-auto mt-8">
+      <h2 className="text-2xl font-bold mb-4">Send USDC</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label htmlFor="destination" className="block text-sm font-medium text-gray-700">
+            Stellar Address
+          </label>
+          <input
+            type="text"
+            id="destination"
+            value={destinationId}
+            onChange={(e) => setDestinationId(e.target.value)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
+            Amount (USDC)
+          </label>
+          <input
+            type="number"
+            id="amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+        >
+          Send USDC
+        </button>
+        {error && <p className="mt-4 text-red-600">{error}</p>}
+        {success && <p className="mt-4 text-green-600">{success}</p>}
+      </form>
+    </div>
   );
 };
 
