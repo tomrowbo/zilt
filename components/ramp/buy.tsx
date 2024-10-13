@@ -115,45 +115,6 @@ const Buy: React.FC = () => {
     }
   };
 
-  const initiatePayment = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('/api/initiatePayment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          mobileNumber,
-          amount: buyAmount,
-          currency: buyCurrency,
-        }),
-      });
-
-      const data = await response.json();
-      console.log('Payment initiation response:', data);
-      
-      if (response.ok) {
-        setModalTitle('Payment Successful');
-        setModalMessage('Your payment has been processed successfully.');
-        setIsSuccess(true);
-      } else {
-        setModalTitle('Payment Failed');
-        setModalMessage('There was an error processing your payment. Please try again.');
-        setIsSuccess(false);
-      }
-      setIsModalOpen(true);
-    } catch (error) {
-      console.error('Error initiating payment:', error);
-      setModalTitle('Error');
-      setModalMessage('An unexpected error occurred. Please try again later.');
-      setIsSuccess(false);
-      setIsModalOpen(true);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <>
       <div className="bg-gray-50 p-4 rounded-lg mb-4">
