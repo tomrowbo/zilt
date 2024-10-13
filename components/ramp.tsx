@@ -1,4 +1,4 @@
-import CryptoExchange from './exchange';
+import CryptoExchange from './ramp/exchange';
 export default function Ramp() {  
   return (
     <section className="relative">
@@ -12,8 +12,9 @@ export default function Ramp() {
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12">
             {/* TODO: body of exchange */}
+            <CryptoExchange />
           </div>
-          <CryptoExchange />
+          
         </div>
       </div>
 
