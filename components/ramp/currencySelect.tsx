@@ -13,9 +13,9 @@ interface Currencies {
 }
 
 const currencies: Currencies = {
-    mpesa: { name: 'mpesa', image: '/images/mpesa.svg' },
-    usdc: { name: 'usdc', image: '/images/usdc-logo.svg' },
-    ecocash: { name: 'ecocash', image: '/images/ecocash.svg' },
+    MPESA: { name: 'MPESA', image: '/images/mpesa.svg' },
+    USDC: { name: 'USDC', image: '/images/usdc-logo.svg' },
+    ECOCASH: { name: 'ECOCASH', image: '/images/ecocash.svg' },
   };
 
 interface CurrencySelectProps {
