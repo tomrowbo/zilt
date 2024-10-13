@@ -69,8 +69,6 @@ For detailed instructions, please visit our [Getting Started Guide](link-to-guid
 ## Architecture Diagram
 
 <img width="1120" alt="Untitled (4)" src="https://github.com/user-attachments/assets/f758afe9-6493-4caf-b304-f9f79590d936">
-![image](https://github.com/user-attachments/assets/cfd90777-acc3-4551-97cd-ca89e713333e)
-
 
 ## Stay Connected
 
