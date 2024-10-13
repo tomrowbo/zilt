@@ -185,7 +185,7 @@ const Buy: React.FC = () => {
             onClick={initiatePayment}
             disabled={loading}
           >
-            {loading ? 'Processing...' : 'Checkout'}
+            {loading ? 'Waiting for payment...' : 'Checkout'}
           </button>
         </div>
       )}
