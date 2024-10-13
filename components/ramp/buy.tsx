@@ -9,17 +9,17 @@ const Buy: React.FC = () => {
   const [buyCurrency, setBuyCurrency] = useState('USDC');
   const [paymentMethod, setPaymentMethod] = useState('mpesa');
   const [receiveAmount, setReceiveAmount] = useState(0);
-  const [receiveCurrency, setReceiveCurrency] = useState('MPESA');
+  const [receiveCurrency, setReceiveCurrency] = useState('TZ');
   const [mobileNumber, setMobileNumber] = useState('');
 
-//   const paymentMethods = {
-//     mpesa: { name: 'MPESA', image: '/images/mpesa.svg' },
-//     ecocash: { name: 'ECOCASH', image: '/images/ecocash.svg' },
-//   };
-
   const paymentMethods = {
+    mpesa: { name: 'MPESA', image: '/images/mpesa.svg' },
+    ecocash: { name: 'ECOCASH', image: '/images/ecocash.svg' },
+  };
+
+  const currencies = {
     TZ: { name: 'TZ', image: '/images/tz.svg' },
-    ZW: { name: 'ZW', image: '/images/ecocash.svg' },
+    ZW: { name: 'ZW', image: '/images/zw.svg' },
     KE: { name: 'KE', image: '/images/ke.svg' },
   };
 
@@ -49,6 +49,24 @@ const Buy: React.FC = () => {
         </div>
       </div>
 
+      < div className="bg-gray-50 p-4 rounded-lg mb-4">
+        <div className="text-sm text-gray-500 mb-2">YOU RECIEVER </div>
+        <div className="flex justify-between items-center">
+          <input
+            type="number"
+            value={receiveAmount}
+            onChange={(e) => setReceiveAmount(parseFloat(e.target.value))}
+            className="text-2xl font-semibold w-1/2 bg-transparent focus:outline-none"
+          />
+          <CurrencySelect 
+            value={receiveCurrency}
+            onChange={setReceiveCurrency}
+            options={['TZ', 'ZW', 'KE']}
+          />
+        </div>
+      </div>
+
+
       <div className="bg-gray-50 p-4 rounded-lg mb-4">
         <div className="text-sm text-gray-500 mb-2">YOU SELL</div>
         <div className="flex justify-between items-center">
@@ -66,23 +84,7 @@ const Buy: React.FC = () => {
         </div>
       </div>
 
-      < div className="bg-gray-50 p-4 rounded-lg mb-4">
-        <div className="text-sm text-gray-500 mb-2">YOU RECEIVE </div>
-        <div className="flex justify-between items-center">
-          <input
-            type="number"
-            value={receiveAmount}
-            onChange={(e) => setReceiveAmount(parseFloat(e.target.value))}
-            className="text-2xl font-semibold w-1/2 bg-transparent focus:outline-none"
-          />
-          <CurrencySelect 
-            value={receiveCurrency}
-            onChange={setReceiveCurrency}
-            options={['MPESA', 'ECOCASH']}
-          />
-        </div>
-      </div>
-
+     
 
       <button
         className="w-full p-2 mb-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
