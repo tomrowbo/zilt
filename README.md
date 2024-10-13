@@ -1,38 +1,83 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Zilt: Bridging Mobile Money and Cryptocurrency
+
+## About Zilt
+
+Zilt is a revolutionary platform that bridges the gap between mobile money and cryptocurrency. Built on the Stellar network, we provide instant access to USDC (USD Coin) through popular mobile payment systems.
+
+## Our Mission
+
+Our mission is to make cryptocurrency accessible to everyone by leveraging existing mobile money infrastructure. We aim to provide a seamless experience for users to convert their mobile money into USDC and vice versa.
+
+
+## Run Locally
+
+Clone the project
+
+```bash
+  https://github.com/tomrowbo/zilt.git
+```
+
+Go to the project directory
+
+```bash
+  cd zilt
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Start the server
+
+```bash
+  npm run dev
+```
+
+## Supported Payment Systems
+
+Zilt currently supports the following mobile payment systems:
+
+- M-Pesa
+- Eco-cash
+- UPI (Unified Payments Interface)
+
+## Key Features
+
+- **Instant Access**: Convert your mobile money to USDC instantly.
+- **Stellar Network**: Built on the fast and efficient Stellar blockchain.
+- **Multiple Payment Systems**: Support for various popular mobile money platforms.
+- **Secure Transactions**: Leveraging blockchain technology for secure and transparent transactions.
 
 ## Getting Started
 
-First, run the development server:
+To start using Zilt, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+1. Sign up for a Zilt account
+2. Connect your preferred mobile money account
+3. Start converting your mobile money to USDC
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+For detailed instructions, please visit our [Getting Started Guide](link-to-guide).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Support
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+If you need assistance or have any questions, please contact our support team at support@zilt.com or visit our [Help Center](link-to-help-center).
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Stay Connected
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Follow us on social media to stay updated on the latest news and features:
 
-## Learn More
+- Twitter: [@ZiltOfficial](link-to-twitter)
 
-To learn more about Next.js, take a look at the following resources:
+## Architecture
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+We welcome contributions from the community. If you'd like to contribute to Zilt, please read our [Contributing Guidelines](link-to-contributing-guidelines).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## License
+
+Zilt is released under the [MIT License](link-to-license).
