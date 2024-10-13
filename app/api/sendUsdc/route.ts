@@ -2,11 +2,17 @@ import { NextResponse, NextRequest } from 'next/server';
 import StellarSdk, { BASE_FEE } from 'stellar-sdk';
 
 // Set up the Stellar server
-const server = new StellarSdk.Horizon.Server("https://horizon-testnet.stellar.org");
+const STELLAR_SERVER_URL = process.env.STELLAR_SERVER_URL;
+if (!STELLAR_SERVER_URL) {
+  throw new Error('STELLAR_SERVER_URL environment variable is not set');
+}
+const server = new StellarSdk.Horizon.Server(STELLAR_SERVER_URL);
 
-// Hardcoded source wallet (USDC Liquidity Pool wallet)
-const SOURCE_SECRET_KEY = process.env.SOURCE_SECRET_KEY || 'SCR4T2LUTYVOR3ND4FXV6ZKICY3GZECJUCBPSRIIA7RQ7NDHM3ZOBZNC';
-const SOURCE_PUBLIC_KEY = StellarSdk.Keypair.fromSecret(SOURCE_SECRET_KEY).publicKey();
+// Source wallet (USDC Liquidity Pool wallet)
+const SOURCE_SECRET_KEY = process.env.SOURCE_SECRET_KEY;
+if (!SOURCE_SECRET_KEY) {
+  throw new Error('SOURCE_SECRET_KEY environment variable is not set');
+}
 
 // Define the USDC asset parameters
 const USDC_ASSET_CODE = 'USDC';
