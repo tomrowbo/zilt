@@ -1,12 +1,13 @@
 'use client'
 
 import React, { useState } from 'react';
+import CurrencySelect from './currencySelect';
 
 const CryptoExchange = () => {
     const [sellAmount, setSellAmount] = useState(0.165);
     const [receiveAmount, setReceiveAmount] = useState(300);
-    const [sellCurrency, setSellCurrency] = useState('ETH');
-    const [receiveCurrency, setReceiveCurrency] = useState('GBP');
+    const [sellCurrency, setSellCurrency] = useState('usdc');
+    const [receiveCurrency, setReceiveCurrency] = useState('mpesa');
     const [mobileNumber, setMobileNumber] = useState('');
   
     return (
@@ -29,14 +30,11 @@ const CryptoExchange = () => {
                 onChange={(e) => setSellAmount(parseFloat(e.target.value))}
                 className="text-2xl font-semibold w-1/2 bg-transparent focus:outline-none"
               />
-              <select
-                value={sellCurrency}
-                onChange={(e) => setSellCurrency(e.target.value)}
-                className="p-2 border border-gray-300 rounded-md bg-white"
-              >
-                <option value="ETH">ETH</option>
-                <option value="BTC">BTC</option>
-              </select>
+              <CurrencySelect 
+              value={sellCurrency}
+              onChange={setSellCurrency}
+              options={['usdc']}
+            />
             </div>
           </div>
   
@@ -49,14 +47,11 @@ const CryptoExchange = () => {
                 onChange={(e) => setReceiveAmount(parseFloat(e.target.value))}
                 className="text-2xl font-semibold w-1/2 bg-transparent focus:outline-none"
               />
-              <select
-                value={receiveCurrency}
-                onChange={(e) => setReceiveCurrency(e.target.value)}
-                className="p-2 border border-gray-300 rounded-md bg-white"
-              >
-                <option value="GBP">GBP</option>
-                <option value="USD">USD</option>
-              </select>
+              <CurrencySelect 
+              value={receiveCurrency}
+              onChange={setReceiveCurrency}
+              options={['mpesa', 'ecocash']}
+            />
             </div>
           </div>
   
