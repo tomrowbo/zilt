@@ -22,9 +22,8 @@ import {
           try {
             kit.setWallet(option.id);
             const { address } = await kit.getAddress();
-            resolve(address);
             console.log("Wallet address:", address);
-            window.location.href = '/';
+            resolve(address);
           } catch (error) {
             console.error("Failed to retrieve wallet address:", error);
             reject(null);
