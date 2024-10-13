@@ -16,8 +16,8 @@ const currencies: Currencies = {
     MPESA: { name: 'MPESA', image: '/images/mpesa.svg' },
     USDC: { name: 'USDC', image: '/images/usdc-logo.svg' },
     TZ: { name: 'TZ', image: '/images/tz.svg' },
-  ZW: { name: 'ZW', image: '/images/zw.svg' },
-  KE: { name: 'KE', image: '/images/ke.svg' },
+    ZW: { name: 'ZW', image: '/images/zw.svg' },
+    KE: { name: 'KE', image: '/images/ke.svg' },
   };
 
   
