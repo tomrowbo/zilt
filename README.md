@@ -3,7 +3,7 @@
 
 ## About Zilt
 
-Zilt is a platform that bridges the gap between mobile money and cryptocurrency. Built on the Stellar network, we provide instant access to USDC (USD Coin) through popular mobile payment systems.
+Zilt is building the infrastructure to onboard the unbanked Via moblie money. Our platform bridges the gap between mobile money and cryptocurrency. Built on the Stellar network, we provide instant access to USDC (USD Coin) through popular mobile payment systems.
 
 ## Our Mission
 
