@@ -1,8 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
+import { openWalletModal } from "@/app/lib/stellarWalletsKey";
 import CurrencySelect from './currencySelect';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import Modal from '../modal';
 
 const Buy: React.FC = () => {
   const [buyAmount, setBuyAmount] = useState<number | undefined>(undefined);
@@ -11,6 +14,37 @@ const Buy: React.FC = () => {
   const [receiveAmount, setReceiveAmount] = useState<number | undefined>(undefined);
   const [receiveCurrency, setReceiveCurrency] = useState('USDC');
   const [mobileNumber, setMobileNumber] = useState('');
+  const [stellarAddress, setStellarAddress] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const savedAddress = localStorage.getItem('stellarAddress');
+    if (savedAddress) {
+      setStellarAddress(savedAddress);
+    }
+  }, []);
+
+  const handleStellarLogin = async () => {
+    setIsLoading(true);
+    try {
+      const address = await openWalletModal();
+      if (address) {
+        setStellarAddress(address);
+        localStorage.setItem('stellarAddress', address);
+      }
+    } catch {
+      alert("Failed to connect with Stellar wallet.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const paymentMethods = {
     mpesa: { name: 'MPESA', image: '/images/mpesa.svg' },
@@ -40,6 +74,84 @@ const Buy: React.FC = () => {
   const handleBuyAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
     setBuyAmount(isNaN(value) ? undefined : value);
+  };
+
+  const initiatePayment = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/initiatePayment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mobileNumber,
+          amount: buyAmount,
+          currency: buyCurrency,
+        }),
+      });
+
+      const data = await response.json();
+      console.log('Payment initiation response:', data);
+      
+      if (response.ok) {
+        setModalTitle('Payment Successful');
+        setModalMessage('Your payment has been processed successfully.');
+        setIsSuccess(true);
+      } else {
+        setModalTitle('Payment Failed');
+        setModalMessage('There was an error processing your payment. Please try again.');
+        setIsSuccess(false);
+      }
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error initiating payment:', error);
+      setModalTitle('Error');
+      setModalMessage('An unexpected error occurred. Please try again later.');
+      setIsSuccess(false);
+      setIsModalOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const initiatePayment = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/initiatePayment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mobileNumber,
+          amount: buyAmount,
+          currency: buyCurrency,
+        }),
+      });
+
+      const data = await response.json();
+      console.log('Payment initiation response:', data);
+      
+      if (response.ok) {
+        setModalTitle('Payment Successful');
+        setModalMessage('Your payment has been processed successfully.');
+        setIsSuccess(true);
+      } else {
+        setModalTitle('Payment Failed');
+        setModalMessage('There was an error processing your payment. Please try again.');
+        setIsSuccess(false);
+      }
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error initiating payment:', error);
+      setModalTitle('Error');
+      setModalMessage('An unexpected error occurred. Please try again later.');
+      setIsSuccess(false);
+      setIsModalOpen(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -98,8 +210,18 @@ const Buy: React.FC = () => {
         </div>
       </div>
 
-      <button className="w-full p-2 mb-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out">
-        Connect Wallet
+
+
+      <button
+        className="w-full p-2 mb-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
+        onClick={handleStellarLogin}
+        disabled={isLoading}
+      >
+        {stellarAddress
+          ? `Connected: ${stellarAddress.slice(0, 6)}...${stellarAddress.slice(-4)}`
+          : isLoading
+          ? "Connecting..."
+          : "Connect Wallet"}
       </button>
 
       <div className="bg-gray-50 p-4 rounded-lg mb-4">
