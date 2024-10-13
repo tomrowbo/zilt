@@ -3,11 +3,7 @@
 import { useState } from 'react'
 import Hero from '@/components/hero-home'
 import FeaturesBlocks from '@/components/features-blocks'
-import Features from '@/components/features-home'
-import Features02 from '@/components/features-home-02'
-import Features03 from '@/components/features-home-03'
-import Target from '@/components/target'
-import PricingSection from '@/components/pricing'
+import SendUsdcForm from '@/components/send-usdc-form'
 import Cta from '@/components/cta'
 
 export default function Home() {
@@ -42,11 +38,7 @@ export default function Home() {
     <>
       <Hero />
       <FeaturesBlocks />
-      {/* <Features /> */}
-      {/* <Features02 /> */}
-      {/* <Features03 /> */}
-      {/* <Target /> */}
-      {/* <PricingSection /> */}
+      <SendUsdcForm />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <h2 className="h3 mb-4 text-center">Test M-Pesa Payment</h2>
         <div className="text-center">

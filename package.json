@@ -27,6 +27,7 @@
     "react-dom": "^18.2.0",
     "rehype-pretty-code": "^0.13.2",
     "shiki": "^1.10.1",
+    "stellar-sdk": "^12.3.0",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
