@@ -61,10 +61,15 @@ To start using Zilt, follow these steps:
 
 For detailed instructions, please visit our [Getting Started Guide](link-to-guide). - DEMO
 
+## Images
+![image](https://github.com/user-attachments/assets/14fcdd5c-4512-490c-8782-16a769a459a3)
+![image](https://github.com/user-attachments/assets/51edb201-c529-4f91-a1ff-d78a670ad328)
+![image](https://github.com/user-attachments/assets/a5837e92-0481-4f4a-a047-c2e1ed8e5184)
 
 ## Architecture Diagram
 
 <img width="1120" alt="Untitled (4)" src="https://github.com/user-attachments/assets/f758afe9-6493-4caf-b304-f9f79590d936">
+![image](https://github.com/user-attachments/assets/cfd90777-acc3-4551-97cd-ca89e713333e)
 
 
 ## Stay Connected
