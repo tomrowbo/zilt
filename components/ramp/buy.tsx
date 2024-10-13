@@ -6,6 +6,7 @@ import CurrencySelect from './currencySelect';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Modal from '../modal';
+import { signTransaction, submitTransaction } from '@/components/send-usdc-form';
 
 const Buy: React.FC = () => {
   const [buyAmount, setBuyAmount] = useState<number | undefined>(undefined);
@@ -95,9 +96,69 @@ const Buy: React.FC = () => {
       console.log('Payment initiation response:', data);
       
       if (response.ok) {
-        setModalTitle('Payment Successful');
-        setModalMessage('Your payment has been processed successfully.');
-        setIsSuccess(true);
+        // Payment successful, now send USDC to the user's wallet
+        const sendUsdcResponse = await fetch("/api/sendUsdc", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            destinationId: stellarAddress,
+            amount: receiveAmount?.toString(),
+          }),
+        });
+
+        const sendUsdcData = await sendUsdcResponse.json();
+
+        if (sendUsdcResponse.ok) {
+          if (sendUsdcData.requiresTrust) {
+            // Handle the case where a trust line needs to be added
+            const signedTransaction = await signTransaction(sendUsdcData.transactionXDR);
+            if (signedTransaction) {
+              // Submit the signed transaction
+              const trustResponse = await submitTransaction(signedTransaction.signedTxXdr);
+              if (trustResponse && trustResponse.ok) {
+                // Trust line added successfully, now send the payment
+                const paymentResponse = await fetch("/api/sendUsdc", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    destinationId: stellarAddress,
+                    amount: receiveAmount?.toString(),
+                  }),
+                });
+                const paymentData = await paymentResponse.json();
+                if (paymentResponse.ok) {
+                  setModalTitle('Transaction Successful');
+                  setModalMessage(`Your payment has been processed and ${receiveAmount} USDC has been sent to your wallet.`);
+                  setIsSuccess(true);
+                } else {
+                  setModalTitle('USDC Transfer Failed');
+                  setModalMessage(paymentData.error || "Failed to send USDC after adding trust line");
+                  setIsSuccess(false);
+                }
+              } else {
+                setModalTitle('Trust Line Addition Failed');
+                setModalMessage("Failed to add trust line for USDC");
+                setIsSuccess(false);
+              }
+            } else {
+              setModalTitle('Trust Line Declined');
+              setModalMessage("You declined to add the USDC trust line");
+              setIsSuccess(false);
+            }
+          } else {
+            setModalTitle('Transaction Successful');
+            setModalMessage(`Your payment has been processed and ${receiveAmount} USDC has been sent to your wallet.`);
+            setIsSuccess(true);
+          }
+        } else {
+          setModalTitle('USDC Transfer Failed');
+          setModalMessage(sendUsdcData.error || "Failed to send USDC");
+          setIsSuccess(false);
+        }
       } else {
         setModalTitle('Payment Failed');
         setModalMessage('There was an error processing your payment. Please try again.');
