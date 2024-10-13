@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { openWalletModal } from "@/app/lib/stellarWalletsKey";
 import CurrencySelect from './currencySelect';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import Modal from '../modal';
 
 const Buy: React.FC = () => {
   const [buyAmount, setBuyAmount] = useState(0);
@@ -16,6 +18,11 @@ const Buy: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const savedAddress = localStorage.getItem('stellarAddress');
@@ -47,7 +54,6 @@ const Buy: React.FC = () => {
 
   const initiatePayment = async () => {
     setLoading(true);
-    setSuccessMessage('');
     try {
       const response = await fetch('/api/initiatePayment', {
         method: 'POST',
@@ -65,13 +71,21 @@ const Buy: React.FC = () => {
       console.log('Payment initiation response:', data);
       
       if (response.ok) {
-        setSuccessMessage('Payment successful!');
+        setModalTitle('Payment Successful');
+        setModalMessage('Your payment has been processed successfully.');
+        setIsSuccess(true);
       } else {
-        setSuccessMessage('Payment failed. Please try again.');
+        setModalTitle('Payment Failed');
+        setModalMessage('There was an error processing your payment. Please try again.');
+        setIsSuccess(false);
       }
+      setIsModalOpen(true);
     } catch (error) {
       console.error('Error initiating payment:', error);
-      setSuccessMessage('An error occurred. Please try again.');
+      setModalTitle('Error');
+      setModalMessage('An unexpected error occurred. Please try again later.');
+      setIsSuccess(false);
+      setIsModalOpen(true);
     } finally {
       setLoading(false);
     }
@@ -173,13 +187,20 @@ const Buy: React.FC = () => {
           >
             {loading ? 'Processing...' : 'Checkout'}
           </button>
-          {successMessage && (
-            <p className={`mt-4 text-lg ${successMessage.includes('successful') ? 'text-green-600' : 'text-red-600'}`}>
-              {successMessage}
-            </p>
-          )}
         </div>
       )}
+      <Modal 
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          if (isSuccess) {
+            router.push('/');
+          }
+        }}
+        title={modalTitle}
+        message={modalMessage}
+        isSuccess={isSuccess}
+      />
     </>
     </>
   );
