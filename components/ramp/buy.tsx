@@ -6,13 +6,14 @@ import CurrencySelect from './currencySelect';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Modal from '../modal';
+import { signTransaction, submitTransaction } from '@/components/send-usdc-form';
 
 const Buy: React.FC = () => {
-  const [buyAmount, setBuyAmount] = useState(0);
-  const [buyCurrency, setBuyCurrency] = useState('USDC');
+  const [buyAmount, setBuyAmount] = useState<number | undefined>(undefined);
+  const [buyCurrency, setBuyCurrency] = useState('TZS');
   const [paymentMethod, setPaymentMethod] = useState('mpesa');
-  const [receiveAmount, setReceiveAmount] = useState(0);
-  const [receiveCurrency, setReceiveCurrency] = useState('MPESA');
+  const [receiveAmount, setReceiveAmount] = useState<number | undefined>(undefined);
+  const [receiveCurrency, setReceiveCurrency] = useState('USDC');
   const [mobileNumber, setMobileNumber] = useState('');
   const [stellarAddress, setStellarAddress] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,9 +48,33 @@ const Buy: React.FC = () => {
   };
 
   const paymentMethods = {
-    TZ: { name: 'TZ', image: '/images/tz.svg' },
-    ZW: { name: 'ZW', image: '/images/ecocash.svg' },
-    KE: { name: 'KE', image: '/images/ke.svg' },
+    mpesa: { name: 'MPESA', image: '/images/mpesa.svg' },
+    ecocash: { name: 'ECOCASH', image: '/images/ecocash.svg' },
+  };
+
+  const currencies = {
+    TZS: { name: 'TZS', image: '/images/tz.svg' },
+    USD: { name: 'USD', image: '/images/zw.svg' },
+    KES: { name: 'KES', image: '/images/ke.svg' },
+  };
+
+  useEffect(() => {
+    if (buyAmount === undefined) return;
+
+    let convertedAmount = 0;
+    if (buyCurrency === 'TZS') {
+      convertedAmount = buyAmount / 2300;
+    } else if (buyCurrency === 'KES') {
+      convertedAmount = buyAmount / 140;
+    } else if (buyCurrency === 'USD') {
+      convertedAmount = buyAmount;
+    }
+    setReceiveAmount(Number(convertedAmount.toFixed(2)));
+  }, [buyAmount, buyCurrency]);
+
+  const handleBuyAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    setBuyAmount(isNaN(value) ? undefined : value);
   };
 
   const initiatePayment = async () => {
@@ -71,9 +96,69 @@ const Buy: React.FC = () => {
       console.log('Payment initiation response:', data);
       
       if (response.ok) {
-        setModalTitle('Payment Successful');
-        setModalMessage('Your payment has been processed successfully.');
-        setIsSuccess(true);
+        // Payment successful, now send USDC to the user's wallet
+        const sendUsdcResponse = await fetch("/api/sendUsdc", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            destinationId: stellarAddress,
+            amount: receiveAmount?.toString(),
+          }),
+        });
+
+        const sendUsdcData = await sendUsdcResponse.json();
+
+        if (sendUsdcResponse.ok) {
+          if (sendUsdcData.requiresTrust) {
+            // Handle the case where a trust line needs to be added
+            const signedTransaction = await signTransaction(sendUsdcData.transactionXDR);
+            if (signedTransaction) {
+              // Submit the signed transaction
+              const trustResponse = await submitTransaction(signedTransaction.signedTxXdr);
+              if (trustResponse && trustResponse.ok) {
+                // Trust line added successfully, now send the payment
+                const paymentResponse = await fetch("/api/sendUsdc", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    destinationId: stellarAddress,
+                    amount: receiveAmount?.toString(),
+                  }),
+                });
+                const paymentData = await paymentResponse.json();
+                if (paymentResponse.ok) {
+                  setModalTitle('Transaction Successful');
+                  setModalMessage(`Your payment has been processed and ${receiveAmount} USDC has been sent to your wallet.`);
+                  setIsSuccess(true);
+                } else {
+                  setModalTitle('USDC Transfer Failed');
+                  setModalMessage(paymentData.error || "Failed to send USDC after adding trust line");
+                  setIsSuccess(false);
+                }
+              } else {
+                setModalTitle('Trust Line Addition Failed');
+                setModalMessage("Failed to add trust line for USDC");
+                setIsSuccess(false);
+              }
+            } else {
+              setModalTitle('Trust Line Declined');
+              setModalMessage("You declined to add the USDC trust line");
+              setIsSuccess(false);
+            }
+          } else {
+            setModalTitle('Transaction Successful');
+            setModalMessage(`Your payment has been processed and ${receiveAmount} USDC has been sent to your wallet.`);
+            setIsSuccess(true);
+          }
+        } else {
+          setModalTitle('USDC Transfer Failed');
+          setModalMessage(sendUsdcData.error || "Failed to send USDC");
+          setIsSuccess(false);
+        }
       } else {
         setModalTitle('Payment Failed');
         setModalMessage('There was an error processing your payment. Please try again.');
@@ -93,10 +178,6 @@ const Buy: React.FC = () => {
 
   return (
     <>
-      {/* Add your buy form here, similar to the sell form in the original component */}
-      {/* Use the state variables and functions defined above */}
-      <>
-
       <div className="bg-gray-50 p-4 rounded-lg mb-4">
         <div className="text-sm text-gray-500 mb-2">Payment Method</div>
         <div className="flex space-x-2">
@@ -118,35 +199,35 @@ const Buy: React.FC = () => {
       </div>
 
       <div className="bg-gray-50 p-4 rounded-lg mb-4">
-        <div className="text-sm text-gray-500 mb-2">YOU SELL</div>
+        <div className="text-sm text-gray-500 mb-2">YOU SELL </div>
         <div className="flex justify-between items-center">
           <input
             type="number"
-            value={buyAmount}
-            onChange={(e) => setBuyAmount(parseFloat(e.target.value))}
+            value={buyAmount === undefined ? '' : buyAmount}
+            onChange={handleBuyAmountChange}
             className="text-2xl font-semibold w-1/2 bg-transparent focus:outline-none"
           />
           <CurrencySelect 
             value={buyCurrency}
             onChange={setBuyCurrency}
-            options={['USDC']}
+            options={['TZS', 'KES', 'USD']}
           />
         </div>
       </div>
 
-      < div className="bg-gray-50 p-4 rounded-lg mb-4">
-        <div className="text-sm text-gray-500 mb-2">YOU RECEIVE </div>
+      <div className="bg-gray-50 p-4 rounded-lg mb-4">
+        <div className="text-sm text-gray-500 mb-2">YOU RECEIVE</div>
         <div className="flex justify-between items-center">
           <input
             type="number"
-            value={receiveAmount}
-            onChange={(e) => setReceiveAmount(parseFloat(e.target.value))}
+            value={receiveAmount === undefined ? '' : receiveAmount}
+            readOnly
             className="text-2xl font-semibold w-1/2 bg-transparent focus:outline-none"
           />
           <CurrencySelect 
             value={receiveCurrency}
             onChange={setReceiveCurrency}
-            options={['MPESA', 'ECOCASH']}
+            options={['USDC']}
           />
         </div>
       </div>
@@ -185,7 +266,7 @@ const Buy: React.FC = () => {
             onClick={initiatePayment}
             disabled={loading}
           >
-            {loading ? 'Processing...' : 'Checkout'}
+            {loading ? 'Waiting for payment...' : 'Checkout'}
           </button>
         </div>
       )}
@@ -201,7 +282,7 @@ const Buy: React.FC = () => {
         message={modalMessage}
         isSuccess={isSuccess}
       />
-    </>
+  
     </>
   );
 };

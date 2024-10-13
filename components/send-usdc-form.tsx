@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { kit } from '@/app/lib/stellarWalletsKey';
 import { TransactionBuilder, Networks } from 'stellar-sdk';
 
-const signTransaction = async (xdr: string) => {
+export const signTransaction = async (xdr: string) => {
   try {
     const transaction = TransactionBuilder.fromXDR(xdr, Networks.TESTNET);
     const transactionXDR = transaction.toXDR();
@@ -16,7 +16,7 @@ const signTransaction = async (xdr: string) => {
   }
 };
 
-const submitTransaction = async (signedXdr: string) => {
+export const submitTransaction = async (signedXdr: string) => {
   try {
     const response = await fetch('/api/submitTransaction', {
       method: 'POST',
